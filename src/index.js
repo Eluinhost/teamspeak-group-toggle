@@ -1,11 +1,7 @@
 var GroupToggler = require('./GroupToggler');
+var config = require('./../config.json');
 
-var cl = new GroupToggler({
-    address: 'uhc.gg',
-    password: 'xxxxx',
-    channelId: 109491,
-    groupId: 222
-});
+var cl = new GroupToggler(config);
 
 cl.run().then(
     function success() {

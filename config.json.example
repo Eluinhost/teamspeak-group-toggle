@@ -1,0 +1,10 @@
+{
+  "address": "localhost",
+  "queryport": 10011,
+  "serverport": 9987,
+  "username": "serveradmin",
+  "password": "",
+  "channelId": 1,
+  "groupId": 1,
+  "kickMessage": "Group toggled"
+}
