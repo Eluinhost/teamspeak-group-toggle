@@ -65,8 +65,11 @@ GroupToggler.prototype._onClientMove = function(moveEvent) {
 };
 
 GroupToggler.prototype._onEnterView = function(viewEvent) {
-    console.log(viewEvent);
-    // TODO kick client without doing anything
+    if(viewEvent.ctid !== this._options.channelId) {
+        return; // not in this channel
+    }
+
+    return this._kickClient(viewEvent.clid, 'Channel not allowed');
 };
 
 GroupToggler.prototype._kickClient = function(clid, message) {
