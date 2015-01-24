@@ -173,7 +173,7 @@ GroupToggler.prototype.run = function() {
 
         // run a keep alive
         setInterval(function() {
-            self.send('whoami', {} , function(err) {
+            self._send('whoami', {} , function(err) {
                 if(err) console.log(err);
             });
         }, 60000)
