@@ -168,7 +168,16 @@ GroupToggler.prototype.run = function() {
     this._client.on('clientmoved', this._onClientMove.bind(this));
     this._client.on('cliententerview', this._onEnterView.bind(this));
 
-    return this._connect();
+    var self = this;
+    return this._connect().then(function() {
+
+        // run a keep alive
+        setInterval(function() {
+            self.send('whoami', {} , function(err) {
+                if(err) console.log(err);
+            });
+        }, 60000)
+    });
 };
 
 module.exports = GroupToggler;
