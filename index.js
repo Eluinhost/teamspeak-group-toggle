@@ -1,7 +1,7 @@
 const BotFactory = require('teamspeak-channel-squatter');
 const { concat, intersection, difference } = require('lodash');
 
-const config = require('./../config.json');
+const config = require('./config.json');
 
 const toggleGroupIds = config.groupIds.map(id => id.toString());
 
