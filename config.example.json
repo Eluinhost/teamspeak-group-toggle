@@ -5,6 +5,6 @@
   "username": "serveradmin",
   "password": "",
   "channelId": 1,
-  "groupId": 1,
+  "groupIds": [],
   "kickMessage": "Group toggled"
 }

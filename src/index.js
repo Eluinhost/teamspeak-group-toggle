@@ -1,13 +1,8 @@
-var GroupToggler = require('./GroupToggler');
-var config = require('./../config.json');
+const GroupToggler = require('./GroupToggler');
+const config = require('./../config.json');
 
-var cl = new GroupToggler(config);
+const cl = new GroupToggler(config);
 
-cl.run().then(
-    function success() {
-        console.log('Connected successfully, now running.');
-    },
-    function error(err) {
-        console.log('Error connecting:', err);
-    }
-);
+cl.run()
+    .then(() => console.log('Connected successfully, now running.'))
+    .catch(err => console.error(err));
