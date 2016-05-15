@@ -2,6 +2,8 @@ const TeamSpeakClient = require('node-teamspeak');
 const { isUndefined, difference, intersection, concat } = require('lodash');
 const Promise = require('bluebird');
 
+class NoPermissionError extends Error {};
+
 module.exports = class GroupToggler {
 
     /**
@@ -15,14 +17,27 @@ module.exports = class GroupToggler {
      * @param {Number} [param.channelId=1] - the channel to squat in
      * @param {Number} [param.groupIds=[]] - the group IDs to toggle
      * @param {String} [param.kickMessage='Group toggled'] - the kick reason after toggle
+     * @param {String} [param.allowedGroupIds=[]] - group ids allowed to use this, leave empty for no restrictions
      * @constructor
      */
-    constructor({address = 'localhost', queryport = 10011, serverport = 9987, username = 'serveradmin', botname = 'BOT', password = '', channelId, groupIds = [], kickMesage = 'Group Toggled'} = {}) {
+    constructor({
+        address = 'localhost',
+        queryport = 10011,
+        serverport = 9987,
+        username = 'serveradmin',
+        botname = 'BOT',
+        password = '',
+        channelId,
+        groupIds = [],
+        kickMesage = 'Group Toggled',
+        allowedGroupIds = []
+    } = {}) {
         if (isUndefined(channelId)) throw new Error("Must provide a channel id to listen in");
 
         this._credentials = { username, password, name: botname };
         this._connectionInfo = { address, queryport, serverport };
         this._channelId = channelId;
+        this._allowedGroupIds = allowedGroupIds.map(it => it.toString());
         this._groupIds = groupIds.map(it => it.toString());
         this._message = kickMesage;
 
@@ -95,6 +110,10 @@ module.exports = class GroupToggler {
                     groupIds = groupIds.split(',');
                 }
 
+                if (this._allowedGroupIds.length > 0 && intersection(this._allowedGroupIds, groupIds).length == 0) {
+                    throw new NoPermissionError();
+                }
+
                 return Promise.all(
                     concat(
                         intersection(this._groupIds, groupIds).map(id => this._send('servergroupdelclient', { sgid: id, cldbid: response.client_database_id })),
@@ -116,9 +135,16 @@ module.exports = class GroupToggler {
 
         const clientId = moveEvent.clid;
 
-        return Promise.all([this.toggleGroups(clientId), this._kickClient(clientId, this._message)])
-            .then(() => console.log('Toggled group for client ID', clientId))
-            .catch(err => console.error('Failed to toggle group/kick client ID', clientId, err))
+        return this.toggleGroups(clientId)
+            .then(() => Promise.all([
+                this._kickClient(clientId, this._message),
+                this._sendPoke(clientId, this._message)
+            ]))
+            .catch(NoPermissionError, () => Promise.all([
+                this._kickClient(clientId, 'You do not have permission to use this channel'),
+                this._sendPoke(clientId, 'You do not have permission to use this channel')
+            ]))
+            .catch(err => console.error('Failed to toggle group/kick client ID', clientId, err));
     };
 
     /**
@@ -133,6 +159,9 @@ module.exports = class GroupToggler {
         return this._kickClient(viewEvent.clid, 'Channel not allowed');
     };
 
+    _sendPoke(clid, msg) {
+        return this._send('clientpoke', { clid, msg });
+    }
 
     /**
      * Kick the client with the given id from the channel

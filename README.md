@@ -20,4 +20,5 @@ The values given are the default values, any non-provided key in config.json wil
       "channelId": 1,                 // the ID of the channel to watch
       "groupIds": [1],                // the IDs of the groups to toggle
       "kickMessage": "Group toggled"  // the kick message when toggling the group
+      "allowedGroupIds": []           // list of allowed groups ids to use the channel, empty array for all groups
     }
