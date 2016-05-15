@@ -6,7 +6,7 @@ will toggle the specified group on the client and then kick them.
 
 # Configuration
 
-Example configuration can be found in /config.json.example. Configuration is expected to be at /config.json
+Example configuration can be found in /config.example.json Configuration is expected to be at /config.json
 
 The values given are the default values, any non-provided key in config.json will default to them.
 
