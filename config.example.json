@@ -3,6 +3,7 @@
   "queryport": 10011,
   "serverport": 9987,
   "username": "serveradmin",
+  "botname": "BOT NAME",
   "password": "",
   "channelId": 1,
   "groupIds": [],

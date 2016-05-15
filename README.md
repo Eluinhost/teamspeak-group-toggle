@@ -15,6 +15,7 @@ The values given are the default values, any non-provided key in config.json wil
       "queryport": 10011,             // serverquery port for connections
       "serverport": 9987,             // port of the virtual server to use
       "username": "serveradmin",      // serverquery account details
+      "botname": "BOT NAME",          // Name of the bot people will see
       "password": "",
       "channelId": 1,                 // the ID of the channel to watch
       "groupIds": [1],                // the IDs of the groups to toggle
